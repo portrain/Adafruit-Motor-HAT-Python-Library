@@ -26,8 +26,6 @@ MICROSTEP_CURVE = [0, 50, 98, 142, 180, 212, 236, 250, 255]
 class StepperMotor(object):
     FORWARD = 1
     BACKWARD = 2
-    BRAKE = 3
-    RELEASE = 4
     SINGLE = 1
     DOUBLE = 2
     INTERLEAVE = 3
@@ -36,7 +34,7 @@ class StepperMotor(object):
     def __init__(self, controller, motor_number, steps=200):
         motor_number -= 1
         if motor_number < 0 or motor_number > len(MOTORS):
-            raise RuntimeError('MotorHAT Motor must be between 1 and 4 inclusive')
+            raise RuntimeError('MotorHAT Motor must be between 1 and {} inclusive'.format(len(MOTORS)))
 
         self._controller = controller
         self._steps = steps
@@ -172,3 +170,9 @@ class StepperMotor(object):
             while (latest_step != 0) and (latest_step != MICROSTEPS):
                 latest_step = self.one_step(dir, style)
                 time.sleep(s_per_s)
+
+    def stop(self):
+        self._controller.set_pin(self._config.a_in1, 0)
+        self._controller.set_pin(self._config.a_in2, 0)
+        self._controller.set_pin(self._config.b_in1, 0)
+        self._controller.set_pin(self._config.b_in2, 0)

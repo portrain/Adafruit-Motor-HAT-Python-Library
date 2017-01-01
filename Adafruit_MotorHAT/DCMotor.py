@@ -16,27 +16,26 @@ MOTORS = [
 class DCMotor(object):
     FORWARD = 1
     BACKWARD = 2
-    BRAKE = 3
-    RELEASE = 4
 
     def __init__(self, controller, motor_number):
         motor_number -= 1
-        if motor_number <0 or motor_number > len(MOTORS):
+        if motor_number < 0 or motor_number > len(MOTORS):
             raise RuntimeError('MotorHAT Motor must be between 1 and 4 inclusive')
 
         self._controller = controller
         self._config = MOTORS[motor_number]
 
-    def run(self, command):
-        if command == self.FORWARD:
+    def run(self, direction):
+        if direction == self.FORWARD:
             self._controller.set_pin(self._config.in2, 0)
             self._controller.set_pin(self._config.in1, 1)
-        elif command == self.BACKWARD:
+        elif direction == self.BACKWARD:
             self._controller.set_pin(self._config.in1, 0)
             self._controller.set_pin(self._config.in2, 1)
-        elif command == self.RELEASE:
-            self._controller.set_pin(self._config.in1, 0)
-            self._controller.set_pin(self._config.in2, 0)
+
+    def stop(self):
+        self._controller.set_pin(self._config.in1, 0)
+        self._controller.set_pin(self._config.in2, 0)
 
     def set_speed(self, speed):
         self._controller.set_pwm(self._config.pwm, 0,
