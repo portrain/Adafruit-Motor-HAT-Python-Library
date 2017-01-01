@@ -1,7 +1,7 @@
 import time
 import logging
 
-from .Adafruit_PWM_Servo_Driver import PWM
+from Adafruit_PCA9685 import PCA9685
 
 
 class AdafruitStepperMotor(object):
@@ -236,7 +236,7 @@ class AdafruitMotorHAT(object):
         self._frequency = frequency        # default @1600Hz PWM freq
         self.motors = [ AdafruitDCMotor(self, m) for m in range(4) ]
         self.steppers = [ AdafruitStepperMotor(self, 1), AdafruitStepperMotor(self, 2) ]
-        self._pwm = PWM(address)
+        self._pwm = PCA9685(address)
         self._pwm.set_pwm_freq(self._frequency)
 
     def set_pin(self, pin, value):
